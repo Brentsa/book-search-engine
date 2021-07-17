@@ -36,18 +36,32 @@ const resolvers = {
 
             return {token, user};
         },
-        saveBook: async (_, {content}) => {
+        saveBook: async (_, {content}, context) => {
+            //if the user is logged in and authorized, then add the book data into the user's saved books array
             if(context.user){
-
+                const user = await User.findByIdAndUpdate(
+                    context.user._id, 
+                    {$addToSet: {savedBooks: content}}, 
+                    {new: true, runValidators: true}
+                );
+                return user;
             }
 
+            //throw an auth error if the user is not logged in
             throw new AuthenticationError('You are not logged in.')
         },
-        removeBook: async (_, {bookId}) => {
+        removeBook: async (_, {bookId}, context) => {
+            //if the user is logged in, find the user and remove the given bookId from their saved books
             if(context.user){
-
+                const user = await User.findByIdAndUpdate(
+                    context.user._id,
+                    {$pull: {savedBooks: {bookId}}},
+                    {new: true}
+                );
+                return user;
             }
 
+            //throw an auth error if the user is not logged in
             throw new AuthenticationError('You are not logged in.')
         }
     }
