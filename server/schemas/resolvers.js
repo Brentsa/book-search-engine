@@ -37,10 +37,18 @@ const resolvers = {
             return {token, user};
         },
         saveBook: async (_, {content}) => {
+            if(context.user){
 
+            }
+
+            throw new AuthenticationError('You are not logged in.')
         },
         removeBook: async (_, {bookId}) => {
+            if(context.user){
 
+            }
+
+            throw new AuthenticationError('You are not logged in.')
         }
     }
 };

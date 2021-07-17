@@ -27,13 +27,15 @@ module.exports = {
       // decode and attach user data to request object
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
       req.user = data;
-    } catch {
+    } 
+    catch {
       console.log('Invalid token');
     }
   
     // return updated request object
     return req;
   },
+
   signToken: function ({ username, email, _id }) {
     const payload = { username, email, _id };
 
