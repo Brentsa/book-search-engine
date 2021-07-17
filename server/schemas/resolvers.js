@@ -5,8 +5,13 @@ const {signToken} = require('../utils/auth');
 //define resolvers to instruct apollo server how to fetch data
 const resolvers = {
     Query: {
-        me: async () => {
-             
+        me: async (_, args, context) => {
+            if(context.user){
+                const user = await User.findOne({_id: context.user._id}).populate('savedBooks');
+                return user;
+            }
+
+            throw new AuthenticationError('You are not logged in.')
         }
     },
     Mutation: {
