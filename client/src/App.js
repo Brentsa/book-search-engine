@@ -19,6 +19,7 @@ import {setContext} from '@apollo/client/link/context'
 function App() {
 
   //*** Connect to the graphql Apollo back-end by creating a link to the backend
+  //*** Have to create PROXY in package.json
   const httpLink = createHttpLink({uri: '/graphql'});
 
   //*** Create the authorized link with the proper header

@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const db = require('./config/connection');
-//const routes = require('./routes');
 
 //import ApolloServer from the Apollo library along with typeDefs and resolvers
 const { ApolloServer } = require('apollo-server-express');;
@@ -24,8 +23,6 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
-
-//app.use(routes);
 
 db.once('open', () => {
   app.listen(PORT, () => {
