@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import SearchBooks from './pages/SearchBooks';
 import SavedBooks from './pages/SavedBooks';
 import Navbar from './components/Navbar';
+
 //import required apollo client tools
 import {
   ApolloProvider, //React component that is used to provide data to other components
@@ -11,14 +12,28 @@ import {
   createHttpLink //Gives control on an Apollo client request, middleware for outbound requests
 } from '@apollo/client';
 
+//import setContext for the apollo link
+import {setContext} from '@apollo/client/link/context'
+
+//*** Connect to the graphql Apollo back-end by creating a link to the backend
+const httpLink = createHttpLink({uri: '/graphql'});
+
+//*** Create the authorized link with the proper header
+const authLink = setContext((_, {headers}) => {
+  const token = localStorage.getItem('id_token');
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : ''
+    }
+  }
+})
+
+//*** Create an ApolloClient instance with the backend connection and a new cache object
+const client = new ApolloClient({link: authLink.concat(httpLink), cache: new InMemoryCache()});
+
 function App() {
-
-  //*** Connect to the graphql Apollo back-end by creating a link to the backend
-  const httpLink = createHttpLink({uri: 'http://localhost:3001/graphql'});
-
-  //*** Create an ApolloClient instance with the backend connection and a new cache object
-  const client = new ApolloClient({link: httpLink, cache: new InMemoryCache()});
-
   return (
     <ApolloProvider client={client}>
       <Router>
