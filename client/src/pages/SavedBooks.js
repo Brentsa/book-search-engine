@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
 //import { getMe, deleteBook } from '../utils/API';
@@ -14,9 +14,9 @@ const SavedBooks = () => {
   //const [userData, setUserData] = useState({});
 
   //query the logged in user data and set it to userData
-  const {loading, data} = useQuery(QUERY_ME);
+  const {data} = useQuery(QUERY_ME);
   const userData = data?.me || {};
-  
+
   //if(user) setUserData(user);
   console.log(userData);
 
@@ -63,7 +63,7 @@ const SavedBooks = () => {
 
     try {
       // const response = await deleteBook(bookId, token);
-      const {data} = await removeBook({
+      await removeBook({
         variables: {bookId}
       });
 
