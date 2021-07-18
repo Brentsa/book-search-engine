@@ -15,25 +15,27 @@ import {
 //import setContext for the apollo link
 import {setContext} from '@apollo/client/link/context'
 
-//*** Connect to the graphql Apollo back-end by creating a link to the backend
-const httpLink = createHttpLink({uri: '/graphql'});
-
-//*** Create the authorized link with the proper header
-const authLink = setContext((_, {headers}) => {
-  const token = localStorage.getItem('id_token');
-
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : ''
-    }
-  }
-})
-
-//*** Create an ApolloClient instance with the backend connection and a new cache object
-const client = new ApolloClient({link: authLink.concat(httpLink), cache: new InMemoryCache()});
 
 function App() {
+
+  //*** Connect to the graphql Apollo back-end by creating a link to the backend
+  const httpLink = createHttpLink({uri: '/graphql'});
+
+  //*** Create the authorized link with the proper header
+  const authLink = setContext((_, {headers}) => {
+    const token = localStorage.getItem('id_token');
+
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : ''
+      }
+    }
+  })
+
+  //*** Create an ApolloClient instance with the backend connection and a new cache object
+  const client = new ApolloClient({link: authLink.concat(httpLink), cache: new InMemoryCache()});
+
   return (
     <ApolloProvider client={client}>
       <Router>
